@@ -58,6 +58,11 @@ async def cmd_test2(message: types.Message):
     await message.answer_dice(DiceEmoji.DART)
 dp.message.register(cmd_test2, Command("2"))
 
+@dp.message(Command("test"))
+async def cmd_test1(message: types.Message, test1, test2):
+    await message.answer(f'Выводим test1: {test1} test2: {test2}')
+
+
 
 
 @dp.message(Command("info"))
@@ -75,7 +80,7 @@ async def echo_with_time(message: types.Message):
 
 # Starting the process of polling new updates
 async def main():
-  await dp.start_polling(bot)
+  await dp.start_polling(bot, test1 = [1, 2, 3], test2 = [4, 5, 6])
 
 if __name__ == "__main__":
   asyncio.run(main())
