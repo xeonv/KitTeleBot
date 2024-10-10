@@ -24,11 +24,18 @@ bot = Bot(
 dp = Dispatcher()
 dp["started_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
 
+@dp.message(Command("help"))
+@dp.message(CommandStart(
+    deep_link=True, magic=F.args == "help"
+))
+async def cmd_start_help(message: types.Message):
+    await message.answer("Это сообщение со справкой")
 
+pattern_iddoc = re.compile(r'iddoc_(\d+)')
 # Handler for the command /start + deep_link
 @dp.message(CommandStart(
     deep_link=True,                
-    magic=F.args.regexp(re.compile(r'iddoc_(\d+)'))                
+    magic=F.args.regexp(pattern_iddoc)                
 ))
 async def cmd_start_dl(
    message: types.Message,

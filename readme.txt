@@ -7,3 +7,5 @@ begin
 end;
 
 pip3 freeze > requirements.txt
+
+t.me/xeontestbot?start=help
