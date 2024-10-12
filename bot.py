@@ -98,7 +98,6 @@ async def cmd_settimer(
         f"Текст: {text_to_send}"
     )
 
-
 @dp.message(Command("info"))
 async def cmd_info(message: types.Message, started_at: str):
     await message.answer(f"Бот запущен {started_at}")
@@ -118,5 +117,6 @@ async def main():
 
 if __name__ == "__main__":
   asyncio.run(main())
+
 
  
