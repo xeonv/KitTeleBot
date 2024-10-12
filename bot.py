@@ -1,13 +1,15 @@
 import asyncio
 import re
 import logging
-from aiogram import Bot, Dispatcher, F, types
+from aiogram import Bot, Dispatcher, F, types 
+from aiogram.types import Message
 from aiogram.filters.command import Command, CommandObject, CommandStart
 from aiogram.enums.dice_emoji import DiceEmoji
 from datetime import datetime
 from config_reader import config
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
+from aiogram.types import FSInputFile, URLInputFile, BufferedInputFile
 
 
 # Enable logging so as not to miss important messages
@@ -101,6 +103,42 @@ async def cmd_settimer(
 @dp.message(Command("info"))
 async def cmd_info(message: types.Message, started_at: str):
     await message.answer(f"Бот запущен {started_at}")
+
+@dp.message(Command('images'))
+async def upload_photo(message: Message):
+    # Сюда будем помещать file_id отправленных файлов, чтобы потом ими воспользоваться
+    file_ids = []
+
+    # Чтобы продемонстрировать BufferedInputFile, воспользуемся "классическим"
+    # открытием файла через `open()`. Но, вообще говоря, этот способ
+    # лучше всего подходит для отправки байтов из оперативной памяти
+    # после проведения каких-либо манипуляций, например, редактированием через Pillow
+    with open("buffer_emulation.png", "rb") as image_from_buffer:
+        result = await message.answer_photo(
+            BufferedInputFile(
+                image_from_buffer.read(),
+                filename="image from buffer.jpg"
+            ),
+            caption="Изображение из буфера"
+        )
+        file_ids.append(result.photo[-1].file_id)
+
+    # Отправка файла из файловой системы
+    image_from_pc = FSInputFile("sun.jpg")
+    result = await message.answer_photo(
+        image_from_pc,
+        caption="Изображение из файла на компьютере"
+    )
+    file_ids.append(result.photo[-1].file_id)
+
+    # Отправка файла по ссылке
+    image_from_url = URLInputFile("https://clipart-library.com/new_gallery/289-2896071_python-logo-png-165709.png")
+    result = await message.answer_photo(
+        image_from_url,
+        caption="Изображение по ссылке"
+    )
+    file_ids.append(result.photo[-1].file_id)
+    await message.answer("Отправленные файлы:\n"+"\n".join(file_ids))
 
 @dp.message(F.text)
 async def echo_with_time(message: types.Message):
