@@ -140,6 +140,13 @@ async def upload_photo(message: Message):
     file_ids.append(result.photo[-1].file_id)
     await message.answer("Отправленные файлы:\n"+"\n".join(file_ids))
 
+@dp.message(F.photo)
+async def download_photo(message: Message, bot: Bot):
+    await bot.download(
+        message.photo[-1],
+        destination=f"tmp/{message.photo[-1].file_id}.jpg"
+    )
+
 @dp.message(F.text)
 async def echo_with_time(message: types.Message):
     # Получаем текущее время в часовом поясе ПК
