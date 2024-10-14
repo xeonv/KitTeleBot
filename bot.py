@@ -104,6 +104,15 @@ async def cmd_settimer(
 async def cmd_info(message: types.Message, started_at: str):
     await message.answer(f"Бот запущен {started_at}")
 
+@dp.message(Command("kb"))
+async def cmd_kb(message: types.Message):
+    kb = [
+        [types.KeyboardButton(text="С пюрешкой")],
+        [types.KeyboardButton(text="Без пюрешки")]
+    ]
+    keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
+    await message.answer("Как подавать котлеты?", reply_markup=keyboard)
+
 @dp.message(Command('images'))
 async def upload_photo(message: Message):
     # Сюда будем помещать file_id отправленных файлов, чтобы потом ими воспользоваться
