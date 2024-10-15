@@ -107,10 +107,14 @@ async def cmd_info(message: types.Message, started_at: str):
 @dp.message(Command("kb"))
 async def cmd_kb(message: types.Message):
     kb = [
-        [types.KeyboardButton(text="С пюрешкой")],
-        [types.KeyboardButton(text="Без пюрешки")]
+        [types.KeyboardButton(text="С пюрешкой"),
+        types.KeyboardButton(text="Без пюрешки")],
     ]
-    keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
+    keyboard = types.ReplyKeyboardMarkup(
+        keyboard=kb,
+        resize_keyboard=True,
+        input_field_placeholder="Выберите способ подачи"
+        )
     await message.answer("Как подавать котлеты?", reply_markup=keyboard)
 
 @dp.message(Command('images'))
