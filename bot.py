@@ -116,6 +116,14 @@ async def cmd_kb(message: types.Message):
         input_field_placeholder="Выберите способ подачи"
         )
     await message.answer("Как подавать котлеты?", reply_markup=keyboard)
+    
+@dp.message(F.text.lower() == "с пюрешкой")
+async def with_puree(message: types.Message):
+    await message.reply("Отличный выбор!")
+
+@dp.message(F.text.lower() == "без пюрешки")
+async def without_puree(message: types.Message):
+    await message.reply("Так невкусно!")
 
 @dp.message(Command('images'))
 async def upload_photo(message: Message):
