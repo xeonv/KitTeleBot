@@ -135,7 +135,7 @@ async def reply_builder(message: types.Message):
     builder.adjust(8)
     await message.answer(
         "Выберите число:",
-        reply_markup=builder.as_markup(resize_keyboard=True),
+        reply_markup=builder.as_markup(resize_keyboard=True, one_time_keyboard=True),
     )
 
 @dp.message(Command('images'))
