@@ -10,6 +10,7 @@ from config_reader import config
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from aiogram.types import FSInputFile, URLInputFile, BufferedInputFile
+from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 
 # Enable logging so as not to miss important messages
@@ -120,10 +121,22 @@ async def cmd_kb(message: types.Message):
 @dp.message(F.text.lower() == "с пюрешкой")
 async def with_puree(message: types.Message):
     await message.reply("Отличный выбор!")
+    await message.reply('Убрали клавиатуру', reply_markup=types.ReplyKeyboardRemove())
 
 @dp.message(F.text.lower() == "без пюрешки")
 async def without_puree(message: types.Message):
     await message.reply("Так невкусно!")
+
+@dp.message(Command("reply_builder"))
+async def reply_builder(message: types.Message):
+    builder = ReplyKeyboardBuilder()
+    for i in range(1, 17):
+        builder.add(types.KeyboardButton(text=str(i)))
+    builder.adjust(8)
+    await message.answer(
+        "Выберите число:",
+        reply_markup=builder.as_markup(resize_keyboard=True),
+    )
 
 @dp.message(Command('images'))
 async def upload_photo(message: Message):
