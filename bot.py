@@ -178,6 +178,21 @@ async def cmd_special_buttons(message: types.Message):
         reply_markup=builder.as_markup(resize_keyboard=True),
     )
 
+@dp.message(F.user_shared)
+async def on_user_shared(message: types.Message):
+    print(
+        f"Request {message.user_shared.request_id}. "
+        f"User ID: {message.user_shared.user_id}"
+    )
+
+
+@dp.message(F.chat_shared)
+async def on_user_shared(message: types.Message):
+    print(
+        f"Request {message.chat_shared.request_id}. "
+        f"User ID: {message.chat_shared.chat_id}"
+    )
+
 @dp.message(Command('images'))
 async def upload_photo(message: Message):
     # Сюда будем помещать file_id отправленных файлов, чтобы потом ими воспользоваться
