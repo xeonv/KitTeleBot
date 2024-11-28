@@ -7,3 +7,7 @@ services:
       context: .
   volumes:
     - .:/bot
+  ports:
+    - "3050:3050"
+  environment:
+    - FIREBIRD_DATABASE_HOST=localhost
