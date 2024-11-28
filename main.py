@@ -43,7 +43,8 @@ async def cmd_start_dl(
 ):
     try:
         cur = con.cursor()
-        id_doc = command.args.split("_")[1]
+        tmp = command.args.split("_")[1]
+        id_doc = tmp if tmp.isdigit() else '0'
         cur.execute(f'select fin_vid from doc_acc_zag where id_doc = {id_doc}')
         answer_from_db = str(cur.fetchone()[0])
         await message.answer(f'Ответ: {answer_from_db}')
