@@ -67,7 +67,17 @@ async def cmd_start_help(message: Message):
 # Handler for any message
 @dp.message()
 async def answer_any_message(message: Message):
-    await message.answer("Я непонимать вас мой господин!")
+    if message.text.isdigit():
+        try:
+            cur = con.cursor()
+            id_doc = message.text
+            cur.execute(f'select fin_vid from doc_acc_zag where id_doc = {id_doc}')
+            answer_from_db = str(cur.fetchone()[0])
+            await message.answer(f'Ответ: {answer_from_db}')
+        except TypeError:
+            await message.answer("По этому заказу нет информации")
+    else:
+        await message.answer("Я непонимать вас мой господин!")
 
 
 # Starting the process of polling new updates
