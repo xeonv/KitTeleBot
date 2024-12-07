@@ -9,6 +9,7 @@ from config_reader import config
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from database import Order, sel_ord_inf
+from lexicon import LEXICON
 
 # Enable logging so as not to miss important messages
 logging.basicConfig(level=logging.INFO)
@@ -42,8 +43,8 @@ async def cmd_start_dl(
     ord = Order(id_doc)
     ord.select_from_db(sel_ord_inf)
     if ord.is_exist:
-       answer = ', '.join(f'{attr}: {value}' for attr, value in vars(ord).items())
-       await message.answer(f'Ответ: {answer}')
+       answer = LEXICON[ord_info].format(**vars(ord))
+       await message.answer(answer)
     else:
         await message.answer("По этому заказу нет информации")
 
@@ -69,8 +70,9 @@ async def answer_any_message(message: Message):
         ord = Order(id_doc)
         ord.select_from_db(sel_ord_inf)
         if ord.is_exist:
-            answer = ', '.join(f'{attr}: {value}' for attr, value in vars(ord).items())
-            await message.answer(f'Ответ: {answer}')
+            # answer = ', '.join(f'{attr}: {value}' for attr, value in vars(ord).items())
+            answer = LEXICON['ord_info'].format(**vars(ord))
+            await message.answer(answer)
         else:
             await message.answer("По этому заказу нет информации")
     else:
