@@ -8,11 +8,7 @@ from datetime import datetime
 from config_reader import config
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
-from firebird.driver import connect, driver_config, DESCRIPTION_NAME, DESCRIPTION_DISPLAY_SIZE
-
-# Connecting to IT Okna DB
-driver_config.read('myapp.cfg')
-con = connect('employee')
+from database import Order, sel_ord_inf
 
 # Enable logging so as not to miss important messages
 logging.basicConfig(level=logging.INFO)
@@ -41,14 +37,14 @@ async def cmd_start_dl(
    message: types.Message,
    command: CommandObject
 ):
-    try:
-        cur = con.cursor()
-        tmp = command.args.split("_")[1]
-        id_doc = tmp if tmp.isdigit() else '0'
-        cur.execute(f'select fin_vid from doc_acc_zag where id_doc = {id_doc}')
-        answer_from_db = str(cur.fetchone()[0])
-        await message.answer(f'Ответ: {answer_from_db}')
-    except TypeError:
+    tmp = command.args.split("_")[1]
+    id_doc = tmp if tmp.isdigit() else '0'
+    ord = Order(id_doc)
+    ord.select_from_db(sel_ord_inf)
+    if ord.is_exist:
+       answer = ', '.join(f'{attr}: {value}' for attr, value in vars(ord).items())
+       await message.answer(f'Ответ: {answer}')
+    else:
         await message.answer("По этому заказу нет информации")
 
 # Handler for the command /start
@@ -69,13 +65,13 @@ async def cmd_start_help(message: Message):
 @dp.message()
 async def answer_any_message(message: Message):
     if message.text.isdigit():
-        try:
-            cur = con.cursor()
-            id_doc = message.text
-            cur.execute(f'select fin_vid from doc_acc_zag where id_doc = {id_doc}')
-            answer_from_db = str(cur.fetchone()[0])
-            await message.answer(f'Ответ: {answer_from_db}')
-        except TypeError:
+        id_doc = message.text
+        ord = Order(id_doc)
+        ord.select_from_db(sel_ord_inf)
+        if ord.is_exist:
+            answer = ', '.join(f'{attr}: {value}' for attr, value in vars(ord).items())
+            await message.answer(f'Ответ: {answer}')
+        else:
             await message.answer("По этому заказу нет информации")
     else:
         await message.answer("Я непонимать вас мой господин!")
