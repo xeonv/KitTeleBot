@@ -43,7 +43,7 @@ async def cmd_start_dl(
     ord = Order(id_doc)
     ord.select_from_db(sel_ord_inf)
     if ord.is_exist:
-       answer = LEXICON[ord_info].format(**vars(ord))
+       answer = LEXICON['ord_info'].format(**vars(ord))
        await message.answer(answer)
     else:
         await message.answer("По этому заказу нет информации")
@@ -51,7 +51,7 @@ async def cmd_start_dl(
 # Handler for the command /start
 @dp.message(Command("start"))
 async def cmd_start(message: Message):
-    await message.answer("Жду ваших указаний мой господин!")
+    await message.answer(LEXICON['start_greeting'])
 
 
 # Handler for the command /help
@@ -60,7 +60,7 @@ async def cmd_start(message: Message):
     deep_link=True, magic=F.args == "help"
 ))
 async def cmd_start_help(message: Message):
-    await message.answer("Этот бот для получения информации по вашим заказам.")
+    await message.answer(LEXICON['help'])
 
 # Handler for any message
 @dp.message()
@@ -76,7 +76,7 @@ async def answer_any_message(message: Message):
         else:
             await message.answer("По этому заказу нет информации")
     else:
-        await message.answer("Я непонимать вас мой господин!")
+        await message.answer(LEXICON['error'])
 
 
 # Starting the process of polling new updates
