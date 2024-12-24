@@ -8,6 +8,7 @@ def create_connection(db):
     connection = None
     try:
         connection = connect(db)
+        connection.isolation_level = 'READ COMMITTED'
     except Exception as e:
         print(f'Database connection error {e}')
     return connection

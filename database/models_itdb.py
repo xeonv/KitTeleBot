@@ -9,16 +9,17 @@ class Order:
 
     def select_from_db(self, select):
         try:
-            cur = con.cursor()
-            query = select.format(iddoc=self.id_doc)
-            cur.execute(query)
-            result = cur.fetchone()
-            if result:
-                # print(cur.description)
-                # For each element in the result, we set the object's attribute.
-                for index, column in enumerate(cur.description):
-                    setattr(self, column[0], result[index])
-                self.is_exist = True
+            with con.cursor() as cur:
+                query = select.format(iddoc=self.id_doc)
+                cur.execute(query)
+                result = cur.fetchone()
+                if result:
+                    # print(cur.description)
+                    # For each element in the result, we set the object's attribute.
+                    for index, column in enumerate(cur.description):
+                        setattr(self, column[0], result[index])
+                    self.is_exist = True
+                con.commit()  # force commit for refresh data from db
         except TypeError as e:
             print (e)
 
