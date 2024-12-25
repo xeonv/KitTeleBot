@@ -1,5 +1,6 @@
 from database import con
 
+
 class Order:
 
     is_exist = False
@@ -9,19 +10,20 @@ class Order:
 
     def select_from_db(self, select):
         try:
-            with con.cursor() as cur:
-                query = select.format(iddoc=self.id_doc)
-                cur.execute(query)
-                result = cur.fetchone()
-                if result:
-                    # print(cur.description)
-                    # For each element in the result, we set the object's attribute.
-                    for index, column in enumerate(cur.description):
-                        setattr(self, column[0], result[index])
-                    self.is_exist = True
-                con.commit()  # force commit for refresh data from db
+            cur = con.cursor()
+            query = select.format(iddoc=self.id_doc)
+            cur.execute(query)
+            result = cur.fetchone()
+            if result:
+                # print(cur.description)
+                # For each element in the result, we set the object's attribute.
+                for index, column in enumerate(cur.description):
+                    setattr(self, column[0], result[index])
+                self.is_exist = True
+            cur.close()
         except TypeError as e:
-            print (e)
+            print(e)
+
 
 sel_ord_inf = '''select z.id_doc, z.depno, z.docnum, z.dog_no, z.docdate, z.findate, z.adres_dest, z.userdata1 dt_entry, z.userdata2 dt_product,
     z.userdata3 dt_delivery, z.is_fact, z.syma, ss_cont.name order_contours, ss_ms.name order_ms,

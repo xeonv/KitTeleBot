@@ -1,4 +1,3 @@
 aiogram==3.13.1
 pydantic-settings==2.5.2
-firebird-driver==1.10.6
-
+fdb==2.0.2
